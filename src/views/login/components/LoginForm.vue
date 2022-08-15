@@ -1,14 +1,21 @@
 <template>
 	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
-		<el-form-item prop="username">
-			<el-input v-model="loginForm.username" placeholder="用户名：admin / user">
+		<el-form-item prop="loginIdentity">
+			<el-input v-model="loginForm.loginIdentity" placeholder="用户名：admin / user">
 				<template #prefix>
 					<el-icon class="el-input__icon"><user /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item prop="password">
-			<el-input type="password" v-model="loginForm.password" placeholder="密码：123456" show-password autocomplete="new-password">
+		<el-form-item prop="credential">
+			<el-input type="password" v-model="loginForm.credential" placeholder="密码123456" show-password autocomplete="new-password">
+				<template #prefix>
+					<el-icon class="el-input__icon"><lock /></el-icon>
+				</template>
+			</el-input>
+		</el-form-item>
+		<el-form-item prop="loginType">
+			<el-input type="loginType" v-model="loginForm.loginType" placeholder="登录方式" show-password autocomplete="new-password">
 				<template #prefix>
 					<el-icon class="el-input__icon"><lock /></el-icon>
 				</template>
@@ -34,7 +41,7 @@ import { loginApi } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
-import md5 from "js-md5";
+// import md5 from "js-md5";
 
 const globalStore = GlobalStore();
 const menuStore = MenuStore();
@@ -44,14 +51,16 @@ const tabStore = TabsStore();
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
 const loginRules = reactive({
-	username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-	password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+	loginIdentity: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+	credential: [{ required: true, message: "请输入密码", trigger: "blur" }]
 });
 
 // 登录表单数据
 const loginForm = reactive<Login.ReqLoginForm>({
-	username: "",
-	password: ""
+	loginIdentity: "",
+	credential: "",
+	loginType: "",
+	uuid: ""
 });
 
 const loading = ref<boolean>(false);
@@ -64,12 +73,16 @@ const login = (formEl: FormInstance | undefined) => {
 		loading.value = true;
 		try {
 			const requestLoginForm: Login.ReqLoginForm = {
-				username: loginForm.username,
-				password: md5(loginForm.password)
+				loginIdentity: loginForm.loginIdentity,
+				credential: loginForm.credential,
+				loginType: loginForm.loginType,
+				uuid: loginForm.credential
+				// credential: md5(loginForm.password)
 			};
 			const res = await loginApi(requestLoginForm);
 			// * 存储 token
-			globalStore.setToken(res.data!.access_token);
+			// globalStore.setToken(res.data!.access_token);
+			globalStore.setToken(res.data?.data?.token);
 			// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
 			menuStore.setMenuList([]);
 			tabStore.closeMultipleTab();
