@@ -2,6 +2,9 @@
 export interface Result {
 	code: string;
 	message: string;
+	stack: string;
+	extra: object;
+	timestamp: number;
 }
 
 // * 请求响应参数(包含data)

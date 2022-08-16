@@ -81,8 +81,7 @@ const login = (formEl: FormInstance | undefined) => {
 			};
 			const res = await loginApi(requestLoginForm);
 			// * 存储 token
-			// globalStore.setToken(res.data!.access_token);
-			globalStore.setToken(res.data?.data?.token);
+			globalStore.setToken(res.data!.token);
 			// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
 			menuStore.setMenuList([]);
 			tabStore.closeMultipleTab();
