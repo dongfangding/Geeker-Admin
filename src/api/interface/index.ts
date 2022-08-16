@@ -82,3 +82,21 @@ export namespace Upload {
 		fileUrl: string;
 	}
 }
+
+// * 我发起的团购
+export namespace Master {
+	export interface ReqListParams extends ReqPage {
+		groupName: string;
+		status: string;
+		ctimeBegin: number;
+		ctimeEnd: number;
+	}
+	export interface List {
+		id: number;
+		name: string;
+		status: number;
+		remark: string;
+		ctime: number;
+		mtime: number;
+	}
+}

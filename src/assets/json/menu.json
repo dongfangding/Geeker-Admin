@@ -3,6 +3,23 @@
 	"data": [
 		{
 			"icon": "home-filled",
+			"title": "我发起的",
+			"path": "/master",
+			"children": [
+				{
+					"path": "/master/index",
+					"title": "我发起的",
+					"icon": "menu"
+				},
+				{
+					"path": "/master/embedded",
+					"title": "内嵌页面",
+					"icon": "menu"
+				}
+			]
+		},
+		{
+			"icon": "home-filled",
 			"title": "首页",
 			"path": "/home/index"
 		},
