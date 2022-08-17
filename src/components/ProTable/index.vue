@@ -37,6 +37,7 @@
 					:width="item.width"
 					:min-width="item.minWidth"
 					:fixed="item.fixed"
+					:formatter="item.formatter"
 				>
 				</el-table-column>
 				<!-- expand（展开查看详情，请使用作用域插槽） -->
@@ -47,6 +48,7 @@
 					:width="item.width"
 					:min-width="item.minWidth"
 					:fixed="item.fixed"
+					:formatter="item.formatter"
 					v-slot="scope"
 				>
 					<slot :name="item.type" :row="scope.row"></slot>

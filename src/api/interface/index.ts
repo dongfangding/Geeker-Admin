@@ -85,11 +85,14 @@ export namespace Upload {
 
 // * 我发起的团购
 export namespace Master {
-	export interface ReqListParams extends ReqPage {
+	export interface MyInitiatedGroupPageRequest extends ReqPage {
 		groupName: string;
 		status: string;
 		ctimeBegin: number;
 		ctimeEnd: number;
+	}
+	export interface CreateFromWxJieLongRequest {
+		text: string;
 	}
 	export interface List {
 		id: number;

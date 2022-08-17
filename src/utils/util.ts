@@ -1,6 +1,33 @@
 import { isArray } from "@/utils/is";
 
 /**
+ * 秒转时间字符串
+ * @param time 秒时间戳
+ * @returns
+ */
+export function secondsToDateStr(time: any) {
+	let newDate = new Date();
+	newDate.setTime(time * 1000);
+	//保留两位有效数字
+	let getTimeData = function (time: any) {
+		return (Array(2).join("0") + time).slice(-2);
+	};
+	return (
+		newDate.getFullYear() +
+		"." +
+		(newDate.getMonth() + 1) +
+		"." +
+		newDate.getDate() +
+		"  " +
+		getTimeData(newDate.getHours()) +
+		":" +
+		getTimeData(newDate.getMinutes()) +
+		":" +
+		getTimeData(newDate.getSeconds())
+	);
+}
+
+/**
  * @description 获取localStorage
  * @param {String} key Storage名称
  * @return string

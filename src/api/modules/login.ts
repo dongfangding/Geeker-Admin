@@ -19,7 +19,30 @@ export const loginApi = (params: Login.ReqLoginForm) => {
 // * 获取按钮权限
 export const getAuthButtons = () => {
 	// return http.get<Login.ResAuthButtons>(PORT1 + `/auth/buttons`);
-	return '{"code":200,"data":{"useHooks":{"add":true,"batchAdd":true,"export":true,"batchDelete":true,"status":true,"view":true,"edit":true,"reset":true,"delete":true},"useComponent":{"add":true,"batchAdd":true,"export":true,"batchDelete":true,"status":true}},"msg":"成功"}';
+	return {
+		code: 200,
+		data: {
+			useHooks: {
+				add: true,
+				batchAdd: true,
+				export: true,
+				batchDelete: true,
+				status: true,
+				view: true,
+				edit: true,
+				reset: true,
+				delete: true
+			},
+			useComponent: {
+				add: true,
+				batchAdd: true,
+				export: true,
+				batchDelete: true,
+				status: true
+			}
+		},
+		msg: "成功"
+	};
 };
 
 // * 获取菜单列表
