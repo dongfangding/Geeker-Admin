@@ -92,15 +92,17 @@ const timeformatter = (row: any) => {
 const columns: Partial<ColumnProps>[] = [
 	{ type: "selection", width: 80, fixed: "left" },
 	{ type: "index", label: "#", width: 80 },
-	{ prop: "name", label: "团购名称", width: 130 },
+	{ prop: "name", label: "团购名称", width: 220 },
 	{ prop: "statusName", label: "状态", width: 80 },
 	{ prop: "ctime", label: "创建时间", width: 120, formatter: timeformatter },
 	{ prop: "mtime", label: "更新时间", width: 120 },
 	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
 ];
 
+// 确认导入微信接龙文案
 const confirmImport = async () => {
 	await createFromWxJieLong({ text: ref(wxText).value });
+	dialogVisible.value = false;
 	proTable.value.refresh();
 };
 
