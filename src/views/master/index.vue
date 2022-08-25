@@ -44,7 +44,7 @@
 				<el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">发布</el-button>
 			</template>
 		</ProTable>
-		<UserDrawer ref="drawerRef" />
+		<GroupDrawer ref="drawerRef" />
 		<ImportExcel ref="dialogRef" />
 	</div>
 </template>
@@ -52,15 +52,16 @@
 <script setup lang="tsx" name="useComponent">
 import { ref, reactive } from "vue";
 import { User } from "@/api/interface";
+import { Master } from "@/api/interface/index";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
+import GroupDrawer from "@/views/master/GroupDrawer.vue";
 import { CirclePlus, Delete, EditPen, DocumentCopy, View, Refresh } from "@element-plus/icons-vue";
-import { deleteUser, editUser, addUser, resetUserPassWord } from "@/api/modules/user";
-import { myInitiatedGroup, createFromWxJieLong } from "@/api/modules/master";
+import { deleteUser, editUser, resetUserPassWord } from "@/api/modules/user";
+import { myInitiatedGroup, createFromWxJieLong, customizeCreate } from "@/api/modules/master";
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -83,18 +84,13 @@ const dataCallback = (data: any) => {
 // 页面按钮权限
 const { BUTTONS } = useAuthButtons();
 
-const timeformatter = (row: any) => {
-	alert(111);
-	return row.status;
-};
-
 // 表格配置项
 const columns: Partial<ColumnProps>[] = [
 	{ type: "selection", width: 80, fixed: "left" },
 	{ type: "index", label: "#", width: 80 },
 	{ prop: "name", label: "团购名称", width: 220 },
 	{ prop: "statusName", label: "状态", width: 80 },
-	{ prop: "ctime", label: "创建时间", width: 120, formatter: timeformatter },
+	{ prop: "ctime", label: "创建时间", width: 120 },
 	{ prop: "mtime", label: "更新时间", width: 120 },
 	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
 ];
@@ -131,16 +127,16 @@ interface DialogExpose {
 const dialogRef = ref<DialogExpose>();
 
 // 打开 drawer(新增、查看、编辑)
-interface DrawerExpose {
+interface GroupDrawerProps {
 	acceptParams: (params: any) => void;
 }
-const drawerRef = ref<DrawerExpose>();
-const openDrawer = (title: string, rowData: Partial<User.ResUserList> = { avatar: "" }) => {
+const drawerRef = ref<GroupDrawerProps>();
+const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateRequest> = { name: "" }) => {
 	let params = {
 		title,
 		rowData: { ...rowData },
 		isView: title === "查看",
-		apiUrl: title === "新增" ? addUser : title === "编辑" ? editUser : "",
+		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? editUser : "",
 		getTableList: proTable.value.refresh
 	};
 	drawerRef.value!.acceptParams(params);

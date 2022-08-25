@@ -18,3 +18,11 @@ export const myInitiatedGroup = (params: Master.MyInitiatedGroupPageRequest) => 
 export const createFromWxJieLong = (params: Master.CreateFromWxJieLongRequest) => {
 	return http.post(PORT1 + `/groupPurchase/createFromWxJieLong`, params);
 };
+
+/**
+ * @name 自定义创建团购
+ */
+// * 获取我发起的团购列表
+export const customizeCreate = (params: Master.CustomizeCreateRequest) => {
+	return http.post(PORT1 + `/groupPurchase/customizeCreate`, params);
+};

@@ -94,6 +94,22 @@ export namespace Master {
 	export interface CreateFromWxJieLongRequest {
 		text: string;
 	}
+	export interface CustomizeCreateRequest {
+		name: string;
+		content: string;
+		publicFlag: boolean;
+		wxIdCardUrl: string;
+		picUrls: string;
+		videoUrl: string;
+		startTime: number;
+		endTime: number;
+		goodName: string;
+		goodDescription: string;
+		price: number;
+		stock: number;
+		limitType: string;
+		limitValue: number;
+	}
 	export interface List {
 		id: number;
 		name: string;
