@@ -117,6 +117,10 @@ export namespace Master {
 	export interface ModifyGroupRequest extends CustomizeCreateRequest {
 		id: number;
 	}
+	export interface UpdateGroupStatusRequest {
+		id: number;
+		status: string;
+	}
 	export interface List {
 		id: number;
 		name: string;

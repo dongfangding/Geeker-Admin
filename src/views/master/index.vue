@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<el-dialog v-model="dialogVisible" title="从微信接龙导入" width="30%">
+		<el-dialog v-model="importDialogVisible" title="从微信接龙导入" width="30%">
+			<el-button v-copy="importExample" style="margin-bottom: 15px">复制</el-button>
 			<el-input
 				v-model="wxText"
 				autosize
@@ -9,8 +10,19 @@
 			/>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="dialogVisible = false">Cancel</el-button>
+					<el-button @click="importDialogVisible = false">Cancel</el-button>
 					<el-button type="primary" @click="confirmImport">Confirm</el-button>
+				</span>
+			</template>
+		</el-dialog>
+		<el-dialog v-model="updateStatusDialogVisible" title="更改团购状态" width="30%">
+			状态:&nbsp;<el-select v-model="dialogGroupStatus" placeholder="请选择更改后状态" clearable>
+				<el-option v-for="item in groupStatus" :key="item.value" :label="item.label" :value="item.value" />
+			</el-select>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="updateStatusDialogVisible = false">Cancel</el-button>
+					<el-button type="primary" @click="confirmUpdateStatus">Confirm</el-button>
 				</span>
 			</template>
 		</el-dialog>
@@ -25,7 +37,7 @@
 				<!-- 表格 header 按钮 -->
 				<template #tableHeader="scope">
 					<el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">创建团购</el-button>
-					<el-button type="primary" :icon="DocumentCopy" @click="dialogVisible = true">导入微信接龙文案</el-button>
+					<el-button type="primary" :icon="DocumentCopy" @click="importDialogVisible = true">导入微信接龙文案</el-button>
 					<el-button
 						type="danger"
 						:icon="Delete"
@@ -41,7 +53,7 @@
 				<template #operation="scope">
 					<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
 					<el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-					<el-button type="primary" link :icon="Refresh" @click="resetPass(scope.row)">状态变更</el-button>
+					<el-button type="primary" link :icon="Refresh" @click="openUpdateStatusDialog(scope.row)">状态变更</el-button>
 					<el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">发布</el-button>
 				</template>
 			</ProTable>
@@ -55,6 +67,7 @@
 import { ref, reactive } from "vue";
 import { User } from "@/api/interface";
 import { Master } from "@/api/interface/index";
+import { groupStatus } from "@/utils/serviceDict";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
@@ -62,14 +75,20 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import GroupDrawer from "@/views/master/GroupDrawer.vue";
 import { CirclePlus, Delete, EditPen, DocumentCopy, View, Refresh } from "@element-plus/icons-vue";
-import { deleteUser, resetUserPassWord } from "@/api/modules/user";
-import { myInitiatedGroup, createFromWxJieLong, customizeCreate, modifyGroupInfo } from "@/api/modules/master";
+import { deleteUser } from "@/api/modules/user";
+import { myInitiatedGroup, createFromWxJieLong, customizeCreate, modifyGroupInfo, updateGroupStatus } from "@/api/modules/master";
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
-let dialogVisible = ref(false);
+// 导入团购
+let importDialogVisible = ref(false);
+let updateStatusDialogVisible = ref(false);
 const wxText = ref("");
-
+const dialogGroupStatus = ref("");
+const dialogGroupId = ref();
+const importExample = ref<string>(
+	"#接龙\n半个南瓜 等会送来 共20份\n例 楼栋号-房间号 需要多少份\n\n1.295-909 6份\n2.295-910 8份\n3.295-204 2份\n\n三点截单"
+);
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 
@@ -100,8 +119,23 @@ const columns: Partial<ColumnProps>[] = [
 // 确认导入微信接龙文案
 const confirmImport = async () => {
 	await createFromWxJieLong({ text: ref(wxText).value });
-	dialogVisible.value = false;
+	importDialogVisible.value = false;
 	proTable.value.refresh();
+};
+
+const openUpdateStatusDialog = async (params: Master.List) => {
+	dialogGroupId.value = params.id;
+	// 不会处理传参的时候是字符串，但是渲染的时候又是数值
+	dialogGroupStatus.value = "";
+	updateStatusDialogVisible.value = true;
+};
+
+// 确认更改团购状态
+const confirmUpdateStatus = async () => {
+	await updateGroupStatus({ id: dialogGroupId.value, status: dialogGroupStatus.value });
+	importDialogVisible.value = false;
+	dialogGroupStatus.value = "";
+	dialogGroupId.value = null;
 };
 
 // 删除用户信息
@@ -113,12 +147,6 @@ const deleteAccount = async (params: User.ResUserList) => {
 // 批量删除用户信息
 const batchDelete = async (id: string[]) => {
 	await useHandleData(deleteUser, { id }, "删除所选用户信息");
-	proTable.value.refresh();
-};
-
-// 重置用户密码
-const resetPass = async (params: User.ResUserList) => {
-	await useHandleData(resetUserPassWord, { id: params.id }, `重置【${params.username}】用户密码`);
 	proTable.value.refresh();
 };
 

@@ -41,11 +41,7 @@
 						value-format="X"
 					/>
 				</el-form-item>
-				<!-- <el-form-item label="性别" prop="gender">
-				<el-select v-model="drawerData.rowData!.gender" placeholder="请选择性别" clearable>
-					<el-option v-for="item in genderType" :key="item.value" :label="item.label" :value="item.value" />
-				</el-select>
-			</el-form-item> -->
+
 				<el-form-item label="商品信息" prop="goodName">
 					<el-input v-model="drawerData.rowData!.goodName" placeholder="请填写商品信息" clearable></el-input>
 				</el-form-item>

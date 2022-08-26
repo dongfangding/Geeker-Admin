@@ -30,3 +30,10 @@ export const customizeCreate = (params: Master.CustomizeCreateRequest) => {
 export const modifyGroupInfo = (params: Master.ModifyGroupRequest) => {
 	return http.post(PORT1 + `/groupPurchase/modifyGroupInfo`, params);
 };
+
+/**
+ * @name 更改团购状态
+ */
+export const updateGroupStatus = (params: Master.UpdateGroupStatusRequest) => {
+	return http.post(PORT1 + `/groupPurchase/updateGroupStatus`, params);
+};

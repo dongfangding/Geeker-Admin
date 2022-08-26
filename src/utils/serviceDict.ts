@@ -7,3 +7,13 @@ export const genderType = [
 	{ label: "男", value: 1 },
 	{ label: "女", value: 2 }
 ];
+
+/**
+ * @description：团购状态
+ */
+export const groupStatus = [
+	{ label: "已创建", value: "CREATED" },
+	{ label: "已到货", value: "ARRIVED" },
+	{ label: "已完成", value: "COMPLETED" },
+	{ label: "已取消", value: "CANCELED" }
+];
