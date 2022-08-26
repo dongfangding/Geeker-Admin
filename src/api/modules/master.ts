@@ -37,3 +37,10 @@ export const modifyGroupInfo = (params: Master.ModifyGroupRequest) => {
 export const updateGroupStatus = (params: Master.UpdateGroupStatusRequest) => {
 	return http.post(PORT1 + `/groupPurchase/updateGroupStatus`, params);
 };
+
+/**
+ * @name 设置发布状态
+ */
+export const publishGroup = (params: Master.PublishGroupRequest) => {
+	return http.post(PORT1 + `/groupPurchase/setPublicState`, params);
+};

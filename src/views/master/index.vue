@@ -54,7 +54,7 @@
 					<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
 					<el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
 					<el-button type="primary" link :icon="Refresh" @click="openUpdateStatusDialog(scope.row)">状态变更</el-button>
-					<el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">发布</el-button>
+					<el-button type="primary" link :icon="Delete" @click="publishGroupFn(scope.row)">发布</el-button>
 				</template>
 			</ProTable>
 			<GroupDrawer ref="drawerRef" />
@@ -65,7 +65,6 @@
 
 <script setup lang="tsx" name="useComponent">
 import { ref, reactive } from "vue";
-import { User } from "@/api/interface";
 import { Master } from "@/api/interface/index";
 import { groupStatus } from "@/utils/serviceDict";
 import { ColumnProps } from "@/components/ProTable/interface";
@@ -76,7 +75,14 @@ import ImportExcel from "@/components/ImportExcel/index.vue";
 import GroupDrawer from "@/views/master/GroupDrawer.vue";
 import { CirclePlus, Delete, EditPen, DocumentCopy, View, Refresh } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
-import { myInitiatedGroup, createFromWxJieLong, customizeCreate, modifyGroupInfo, updateGroupStatus } from "@/api/modules/master";
+import {
+	myInitiatedGroup,
+	createFromWxJieLong,
+	customizeCreate,
+	modifyGroupInfo,
+	updateGroupStatus,
+	publishGroup
+} from "@/api/modules/master";
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -125,7 +131,7 @@ const confirmImport = async () => {
 
 const openUpdateStatusDialog = async (params: Master.List) => {
 	dialogGroupId.value = params.id;
-	// 不会处理传参的时候是字符串，但是渲染的时候又是数值
+	// 不会处理传参的时候是字符串，但是渲染的时候又是数值，所只能先清除掉，让界面没有值，至少不是错的
 	dialogGroupStatus.value = "";
 	updateStatusDialogVisible.value = true;
 };
@@ -138,10 +144,9 @@ const confirmUpdateStatus = async () => {
 	dialogGroupId.value = null;
 };
 
-// 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-	await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-	proTable.value.refresh();
+// 发布团购
+const publishGroupFn = async (params: Master.List) => {
+	await useHandleData(publishGroup, { id: params.id, publicFlag: !params.publicFlag }, `确认发布？`);
 };
 
 // 批量删除用户信息

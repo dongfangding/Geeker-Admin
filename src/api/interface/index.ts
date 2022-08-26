@@ -121,12 +121,25 @@ export namespace Master {
 		id: number;
 		status: string;
 	}
+	export interface PublishGroupRequest {
+		id: number;
+		publicFlag: boolean;
+	}
 	export interface List {
 		id: number;
 		name: string;
-		status: number;
-		remark: string;
-		ctime: number;
-		mtime: number;
+		content: string;
+		publicFlag: boolean;
+		wxIdCardUrl: string;
+		picUrls: string;
+		videoUrl: string;
+		startTime: number;
+		endTime: number;
+		goodName: string;
+		goodDescription: string;
+		price: number;
+		stock: number;
+		limitType: string;
+		limitValue: number;
 	}
 }
