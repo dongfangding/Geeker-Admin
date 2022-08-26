@@ -1,51 +1,53 @@
 <template>
-	<el-dialog v-model="dialogVisible" title="从微信接龙导入" width="30%">
-		<el-input
-			v-model="wxText"
-			autosize
-			type="textarea"
-			placeholder="将微信接龙文案完全复制粘贴到当前输入框中，注意换行，不要改变原格式"
-		/>
-		<template #footer>
-			<span class="dialog-footer">
-				<el-button @click="dialogVisible = false">Cancel</el-button>
-				<el-button type="primary" @click="confirmImport">Confirm</el-button>
-			</span>
-		</template>
-	</el-dialog>
-	<div class="table-box">
-		<ProTable
-			ref="proTable"
-			:columns="columns"
-			:requestApi="myInitiatedGroup"
-			:initParam="initParam"
-			:dataCallback="dataCallback"
-		>
-			<!-- 表格 header 按钮 -->
-			<template #tableHeader="scope">
-				<el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">创建团购</el-button>
-				<el-button type="primary" :icon="DocumentCopy" @click="dialogVisible = true">导入微信接龙文案</el-button>
-				<el-button
-					type="danger"
-					:icon="Delete"
-					plain
-					:disabled="!scope.isSelected"
-					@click="batchDelete(scope.ids)"
-					v-if="BUTTONS.batchDelete"
-				>
-					批量删除用户
-				</el-button>
+	<div>
+		<el-dialog v-model="dialogVisible" title="从微信接龙导入" width="30%">
+			<el-input
+				v-model="wxText"
+				autosize
+				type="textarea"
+				placeholder="将微信接龙文案完全复制粘贴到当前输入框中，注意换行，不要改变原格式"
+			/>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="dialogVisible = false">Cancel</el-button>
+					<el-button type="primary" @click="confirmImport">Confirm</el-button>
+				</span>
 			</template>
-			<!-- 表格操作 -->
-			<template #operation="scope">
-				<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-				<el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-				<el-button type="primary" link :icon="Refresh" @click="resetPass(scope.row)">状态变更</el-button>
-				<el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">发布</el-button>
-			</template>
-		</ProTable>
-		<GroupDrawer ref="drawerRef" />
-		<ImportExcel ref="dialogRef" />
+		</el-dialog>
+		<div class="table-box">
+			<ProTable
+				ref="proTable"
+				:columns="columns"
+				:requestApi="myInitiatedGroup"
+				:initParam="initParam"
+				:dataCallback="dataCallback"
+			>
+				<!-- 表格 header 按钮 -->
+				<template #tableHeader="scope">
+					<el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">创建团购</el-button>
+					<el-button type="primary" :icon="DocumentCopy" @click="dialogVisible = true">导入微信接龙文案</el-button>
+					<el-button
+						type="danger"
+						:icon="Delete"
+						plain
+						:disabled="!scope.isSelected"
+						@click="batchDelete(scope.ids)"
+						v-if="BUTTONS.batchDelete"
+					>
+						批量删除用户
+					</el-button>
+				</template>
+				<!-- 表格操作 -->
+				<template #operation="scope">
+					<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+					<el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+					<el-button type="primary" link :icon="Refresh" @click="resetPass(scope.row)">状态变更</el-button>
+					<el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">发布</el-button>
+				</template>
+			</ProTable>
+			<GroupDrawer ref="drawerRef" />
+			<ImportExcel ref="dialogRef" />
+		</div>
 	</div>
 </template>
 
@@ -60,8 +62,8 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import GroupDrawer from "@/views/master/GroupDrawer.vue";
 import { CirclePlus, Delete, EditPen, DocumentCopy, View, Refresh } from "@element-plus/icons-vue";
-import { deleteUser, editUser, resetUserPassWord } from "@/api/modules/user";
-import { myInitiatedGroup, createFromWxJieLong, customizeCreate } from "@/api/modules/master";
+import { deleteUser, resetUserPassWord } from "@/api/modules/user";
+import { myInitiatedGroup, createFromWxJieLong, customizeCreate, modifyGroupInfo } from "@/api/modules/master";
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref();
@@ -90,8 +92,8 @@ const columns: Partial<ColumnProps>[] = [
 	{ type: "index", label: "#", width: 80 },
 	{ prop: "name", label: "团购名称", width: 220 },
 	{ prop: "statusName", label: "状态", width: 80 },
-	{ prop: "ctime", label: "创建时间", width: 120 },
-	{ prop: "mtime", label: "更新时间", width: 120 },
+	{ prop: "formatStartTime", label: "开始时间", width: 170 },
+	{ prop: "formatEndTime", label: "结束时间", width: 170 },
 	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
 ];
 
@@ -136,7 +138,7 @@ const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateReques
 		title,
 		rowData: { ...rowData },
 		isView: title === "查看",
-		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? editUser : "",
+		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? modifyGroupInfo : "",
 		getTableList: proTable.value.refresh
 	};
 	drawerRef.value!.acceptParams(params);

@@ -6,7 +6,6 @@ import http from "@/api";
 /**
  * @name 我发起的团购
  */
-// * 获取我发起的团购列表
 export const myInitiatedGroup = (params: Master.MyInitiatedGroupPageRequest) => {
 	return http.get<ResPage<Master.List>>(PORT1 + `/groupPurchase/myInitiatedGroup`, params);
 };
@@ -14,7 +13,6 @@ export const myInitiatedGroup = (params: Master.MyInitiatedGroupPageRequest) => 
 /**
  * @name 从微信接龙导入团购
  */
-// * 获取我发起的团购列表
 export const createFromWxJieLong = (params: Master.CreateFromWxJieLongRequest) => {
 	return http.post(PORT1 + `/groupPurchase/createFromWxJieLong`, params);
 };
@@ -22,7 +20,13 @@ export const createFromWxJieLong = (params: Master.CreateFromWxJieLongRequest) =
 /**
  * @name 自定义创建团购
  */
-// * 获取我发起的团购列表
 export const customizeCreate = (params: Master.CustomizeCreateRequest) => {
 	return http.post(PORT1 + `/groupPurchase/customizeCreate`, params);
+};
+
+/**
+ * @name 修改团购信息
+ */
+export const modifyGroupInfo = (params: Master.ModifyGroupRequest) => {
+	return http.post(PORT1 + `/groupPurchase/modifyGroupInfo`, params);
 };

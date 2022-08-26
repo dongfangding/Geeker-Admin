@@ -15,9 +15,9 @@
 			:drag="drag"
 			accept="image/jpeg,image/jpeg,image/png"
 		>
-			<img v-if="imageUrl" :src="imageUrl" class="upload-image" />
+			<img v-if="file" :src="file" class="upload-image" />
 			<el-icon v-else class="upload-icon"><Plus /></el-icon>
-			<div v-if="imageUrl" class="upload-handle" @click.stop>
+			<div v-if="file" class="upload-handle" @click.stop>
 				<div class="handle-icon" @click="editImg" v-if="!disabled">
 					<el-icon><Edit /></el-icon>
 					<span>编辑</span>
@@ -35,7 +35,7 @@
 		<div class="el-upload__tip">
 			<slot name="tip"></slot>
 		</div>
-		<el-image-viewer v-if="dialogVisible" @close="imageView" :url-list="[imageUrl]" />
+		<el-image-viewer v-if="dialogVisible" @close="imageView" :url-list="[file]" />
 	</div>
 </template>
 
@@ -47,7 +47,7 @@ import { uploadImg } from "@/api/modules/upload";
 import type { UploadProps, UploadRequestOptions } from "element-plus";
 
 interface UploadFileProps {
-	imageUrl: string; // 图片地址 ==> 必传
+	file: string; // 图片地址 ==> 必传
 	id?: string; // 组件id ==> 非必传，当页面存在多个上传组件时必传（默认为upload）
 	drag?: boolean; // 是否支持拖拽上传 ==> 非必传（默认为true）
 	disabled?: boolean; // 是否禁用上传组件 ==> 非必传（默认为false）
@@ -68,7 +68,7 @@ const props = withDefaults(defineProps<UploadFileProps>(), {
  * @param options 上传的文件
  * */
 interface UploadEmits {
-	(e: "update:imageUrl", value: string): void;
+	(e: "update:file", value: string): void;
 	(e: "check-validate"): void;
 }
 const emit = defineEmits<UploadEmits>();
@@ -77,7 +77,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
 	formData.append("file", options.file);
 	try {
 		const { data } = await uploadImg(formData);
-		emit("update:imageUrl", data!.fileUrl);
+		emit("update:file", data!.accessFullPath);
 		emit("check-validate");
 	} catch (error) {
 		options.onError(error as any);
@@ -88,7 +88,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
  * @description 删除图片
  * */
 const deleteImg = () => {
-	emit("update:imageUrl", "");
+	emit("update:file", "");
 };
 
 /**

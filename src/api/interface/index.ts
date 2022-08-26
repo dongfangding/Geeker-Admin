@@ -78,8 +78,12 @@ export namespace User {
 
 // * 文件上传模块
 export namespace Upload {
-	export interface ResFileUrl {
-		fileUrl: string;
+	export interface UploadResponse {
+		group: string; // 组
+		path: string; // 路径
+		fullPath: string; // 全路径(group + path)
+		thumbPath: string; // 生成的缩略图路径
+		accessFullPath: string; // 带域名的可访问的全路径地址
 	}
 }
 
@@ -109,6 +113,9 @@ export namespace Master {
 		stock: number;
 		limitType: string;
 		limitValue: number;
+	}
+	export interface ModifyGroupRequest extends CustomizeCreateRequest {
+		id: number;
 	}
 	export interface List {
 		id: number;
