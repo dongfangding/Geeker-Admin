@@ -15,11 +15,9 @@
 			</el-input>
 		</el-form-item>
 		<el-form-item prop="loginType">
-			<el-input type="loginType" v-model="loginForm.loginType" placeholder="登录方式" show-password autocomplete="new-password">
-				<template #prefix>
-					<el-icon class="el-input__icon"><lock /></el-icon>
-				</template>
-			</el-input>
+			<el-select v-model="loginForm.loginType" placeholder="请选择登录方式" clearable>
+				<el-option v-for="item in loginType" :key="item.value" :label="item.label" :value="item.value" />
+			</el-select>
 		</el-form-item>
 	</el-form>
 	<div class="login-btn">
@@ -41,6 +39,7 @@ import { loginApi } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
+import { loginType } from "@/utils/serviceDict";
 // import md5 from "js-md5";
 
 const globalStore = GlobalStore();

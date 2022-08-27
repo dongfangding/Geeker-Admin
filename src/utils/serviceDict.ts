@@ -17,3 +17,11 @@ export const groupStatus = [
 	{ label: "已完成", value: "COMPLETED" },
 	{ label: "已取消", value: "CANCELED" }
 ];
+
+/**
+ * @description：登录方式
+ */
+export const loginType = [
+	{ label: "密码登录", value: "PASSWORD" },
+	{ label: "验证码登录", value: "VERIFY_CODE" }
+];

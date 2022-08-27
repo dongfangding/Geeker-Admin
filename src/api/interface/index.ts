@@ -142,4 +142,8 @@ export namespace Master {
 		limitType: string;
 		limitValue: number;
 	}
+	export interface MarketplaceList extends List {
+		groupMasterName: string;
+		groupMasterAvatarUrl: string;
+	}
 }

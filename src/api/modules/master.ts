@@ -4,6 +4,13 @@ import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 
 /**
+ * @name 团购市场
+ */
+export const marketplaceGroupPageList = (params: Master.MyInitiatedGroupPageRequest) => {
+	return http.get<ResPage<Master.MarketplaceList>>(PORT1 + `/groupPurchase/marketplaceGroupPageList`, params);
+};
+
+/**
  * @name 我发起的团购
  */
 export const myInitiatedGroup = (params: Master.MyInitiatedGroupPageRequest) => {

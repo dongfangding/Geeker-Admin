@@ -119,6 +119,7 @@ const columns: Partial<ColumnProps>[] = [
 	{ prop: "statusName", label: "状态", width: 80 },
 	{ prop: "formatStartTime", label: "开始时间", width: 170 },
 	{ prop: "formatEndTime", label: "结束时间", width: 170 },
+	{ prop: "publicFlag", label: "是否已发布", width: 100 },
 	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
 ];
 
@@ -139,14 +140,16 @@ const openUpdateStatusDialog = async (params: Master.List) => {
 // 确认更改团购状态
 const confirmUpdateStatus = async () => {
 	await updateGroupStatus({ id: dialogGroupId.value, status: dialogGroupStatus.value });
-	importDialogVisible.value = false;
+	updateStatusDialogVisible.value = false;
 	dialogGroupStatus.value = "";
 	dialogGroupId.value = null;
+	proTable.value.refresh();
 };
 
 // 发布团购
 const publishGroupFn = async (params: Master.List) => {
 	await useHandleData(publishGroup, { id: params.id, publicFlag: !params.publicFlag }, `确认发布？`);
+	proTable.value.refresh();
 };
 
 // 批量删除用户信息
