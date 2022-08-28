@@ -13,7 +13,7 @@ const masterRouter: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: "/master/index",
-				name: "index",
+				name: "master",
 				component: () => import("@/views/master/index.vue"),
 				meta: {
 					keepAlive: true,

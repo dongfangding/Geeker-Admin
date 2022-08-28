@@ -19,7 +19,7 @@
 	</div>
 </template>
 
-<script setup lang="tsx" name="marketplaceComponent">
+<script setup lang="tsx" name="Component">
 import { ref, reactive } from "vue";
 import { Master } from "@/api/interface/index";
 import { ColumnProps } from "@/components/ProTable/interface";

@@ -30,6 +30,7 @@
 			<ProTable
 				ref="proTable"
 				:columns="columns"
+				height="1000"
 				:requestApi="myInitiatedGroup"
 				:initParam="initParam"
 				:dataCallback="dataCallback"
@@ -93,7 +94,15 @@ const wxText = ref("");
 const dialogGroupStatus = ref("");
 const dialogGroupId = ref();
 const importExample = ref<string>(
-	"#接龙\n半个南瓜 等会送来 共20份\n例 楼栋号-房间号 需要多少份\n\n1.295-909 6份\n2.295-910 8份\n3.295-204 2份\n\n三点截单"
+	`接龙
+半个南瓜 等会送来 共20份
+例 楼栋号-房间号 需要多少份
+
+1.295-909 6份
+2.295-910 8份
+3.295-204 2份
+
+三点截单`
 );
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
